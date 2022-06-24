@@ -12,7 +12,7 @@ public class GuestbookController {
 
     @GetMapping(value = {"/", "/list"})
     public String list() {
-        log.info("----- GuestbookController's list()");
+        log.info("----- GuestbookController list()");
 
         return "guestbook/list";
     }
