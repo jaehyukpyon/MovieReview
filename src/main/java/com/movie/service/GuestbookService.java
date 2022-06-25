@@ -33,4 +33,10 @@ public interface GuestbookService {
 
     public abstract PageResultDTO<GuestbookDTO, Guestbook> getList(PageRequestDTO requestDTO);
 
+    public abstract GuestbookDTO read(Long gno);
+
+    public abstract void remove(Long gno);
+
+    public abstract void modify(GuestbookDTO dto);
+
 }
