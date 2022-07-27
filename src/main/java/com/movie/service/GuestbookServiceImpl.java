@@ -5,6 +5,7 @@ import com.movie.dto.PageRequestDTO;
 import com.movie.dto.PageResultDTO;
 import com.movie.entity.Guestbook;
 import com.movie.repository.GuestbookRepository;
+import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -72,4 +73,9 @@ public class GuestbookServiceImpl implements GuestbookService {
             repository.save(entity);
         }
     }
+
+    private BooleanBuilder getSearch(PageRequestDTO pageRequestDTO) {
+        return null;
+    }
+
 }
