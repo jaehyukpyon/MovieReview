@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>read.html</title>
+</head>
 
 <th:block th:replace="~{/layout/basic :: setContent(~{this::content} )}">
 
@@ -38,12 +41,17 @@
                 <input type="text" class="form-control" name="regDate" th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
             </div>
 
-            <a th:href="@{/guestbook/modify(gno=${dto.gno}, page=${requestDTO.page})}">
+            <a th:href="@{/guestbook/modify(gno=${dto.gno},
+                                            page=${requestDTO.page},
+                                            type=${requestDTO.type},
+                                            keyword=${requestDTO.keyword})}">
                 <button type="button" class="btn btn-primary">modify</button>
             </a>
 
-            <a th:href="@{/guestbook/list(page=${requestDTO.page})}">
-                <button type="button" class="btn btn-info">list</button>
+            <a th:href="@{/guestbook/list(page=${requestDTO.page},
+                                          type=${requestDTO.type},
+                                          keyword=${requestDTO.keyword})}">
+                <button type="button" class="btn btn-info">back to list</button>
             </a>
         </form>
 

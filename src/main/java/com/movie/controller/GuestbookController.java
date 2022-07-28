@@ -29,6 +29,7 @@ public class GuestbookController {
     @GetMapping(value = {"/", "/list"})
     public void list(PageRequestDTO pageRequestDTO, Model model) {
         log.info("----- GuestbookController list()");
+        log.info("page : {}", pageRequestDTO.getPage());
 
         model.addAttribute("result", service.getList(pageRequestDTO));
     }
@@ -54,6 +55,7 @@ public class GuestbookController {
     public void read(Long gno, @ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
         // list.html의 a 태그에서 <a th:href="@{/guestbook/read(gno = ${dto.gno}, page= ${result.page})}"></a>
         log.info("----- GuestbookController GET read()/modify()");
+        log.info("gno : {}, page : {}", gno, requestDTO.getPage());
 
         GuestbookDTO dto = service.read(gno);
 
@@ -79,8 +81,11 @@ public class GuestbookController {
 
         service.modify(dto);
 
-        redirectAttributes.addAttribute("page", requestDTO.getPage());
         redirectAttributes.addAttribute("gno", dto.getGno());
+
+        redirectAttributes.addAttribute("page", requestDTO.getPage());
+        redirectAttributes.addAttribute("type", requestDTO.getType());
+        redirectAttributes.addAttribute("keyword", requestDTO.getKeyword());
 
         return "redirect:/guestbook/read";
     }

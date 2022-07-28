@@ -14,37 +14,71 @@
             </span>
         </h1>
 
+        <form action="/guestbook/list" method="get" id="searchForm">
+            <div class="input-group">
+                <input type="hidden" name="page" value="1" /> <!--Search button을 누르는 것은 새롭게 검색을 진행하는 것 >> 무조건 1 page로 이동하도록 지정-->
+                <div class="input-group-prepend">
+                    <select class="custom-select" name="type">
+                        <option th:selected="${pageRequestDTO.type == null}">검색 조건을 선택하세요.</option>
+                        <option value="t" th:selected="${pageRequestDTO.type == 't'}">제목</option>
+                        <option value="c" th:selected="${pageRequestDTO.type == 'c'}">내용</option>
+                        <option value="w" th:selected="${pageRequestDTO.type == 'w'}">작성자</option>
+                        <option value="tc" th:selected="${pageRequestDTO.type == 'tc'}">제목 + 내용</option>
+                        <option value="tcw" th:selected="${pageRequestDTO.type == 'tcw'}">제목 + 내용 + 작성자</option>
+                    </select>
+                </div>
+                <input class="form-control" name="keyword" th:value="${pageRequestDTO.keyword}" />
+                <div class="input-group-append" id="button-addon4">
+                    <button class="btn btn-outline-secondary btn-search" type="button">Search</button>
+                    <button class="btn btn-outline-secondary btn-clear" type="button">Clear</button> <!--Clear button 클릭 시, 모든 검색 조건 없이 새로 목록 page를 보는 것-->
+                </div>
+            </div>
+        </form>
+
+        <br />
+        <br />
+
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Gno</th>
+                    <th scope="col">#Gno</th>
                     <th scope="col">Title</th>
+                    <th scope="col">Writer</th>
                     <th scope="col">Regdate</th>
                 </tr>
             </thead>
 
             <tbody>
                 <tr th:each="dto : ${result.dtoList}">
-                    <th scope="row">
-                        <a th:href="@{/guestbook/read(gno = ${dto.gno}, page= ${result.page})}">
-                            [[${dto.gno}]]
-                        </a>
-                    </th>
-                    <td>[[${dto.title}]]</td>
-                    <td>[[${dto.writer}]]</td>
-                    <td>[[${#temporals.format(dto.regDate, 'yyyy/MM/dd')}]]</td>
+                        <th scope="row">[[${dto.gno}]]</th>
+                        <td>
+                            <a style="display: block; width: 100%; height: 100%;"
+                               th:href="@{/guestbook/read(gno=${dto.gno},
+                                                          page=${result.page},
+                                                          type=${pageRequestDTO.type},
+                                                          keyword=${pageRequestDTO.keyword})}">
+                                [[${dto.title}]]
+                            </a>
+                        </td>
+                        <td>[[${dto.writer}]]</td>
+                        <td>[[${#temporals.format(dto.regDate, 'yyyy/MM/dd')}]]</td>
                 </tr>
             </tbody>
         </table>
 
         <ul class="pagination h-100 justify-content-center align-items-center">
             <li class="page-item" th:if="${result.prev}">
-                <a class="page-link" tabindex="-1" th:href="@{/guestbook/list(page=${result.start - 1})}">previous</a>
+                <a class="page-link" tabindex="-1"
+                   th:href="@{/guestbook/list(page=${result.start - 1},
+                                              type=${pageRequestDTO.type},
+                                              keyword=${pageRequestDTO.keyword})}">previous</a>
             </li>
 
             <li th:class="'page-item ' + ${result.page == page ? 'active' : ''}" th:each="page : ${result.pageList}">
-                <a class="page-link" th:href="@{/guestbook/list(page=${page})}">
+                <a class="page-link"
+                   th:href="@{/guestbook/list(page=${page},
+                                              type=${pageRequestDTO.type},
+                                              keyword=${pageRequestDTO.keyword})}">
                     [[${page}]]
                 </a>
             </li>
@@ -65,19 +99,33 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>Modal body text goes here.</p>
+                        <p>정상적으로 등록되었습니다.</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
                     </div>
                 </div>
             </div>
         </div>
 
         <script th:inline="javascript">
+            // 새로운 글 등록 시, modal 보여주기
             const msg = [[${msg}]]; // 등록 후 redirect 되는 목록 화면이 아니고, 단순한 링크 이동일 경우 msg 변수에는 null 이 대입
             console.log("msg: " + msg);
+            if (msg != null) {
+                $("div.modal").modal();
+            }
+
+            // 검색 처리 조건 관련
+            const searchForm = $("form#searchForm");
+            $("button.btn-search").click(function (e) {
+                console.log("btn-search clicked!");
+                searchForm.submit();
+            })
+            $("button.btn-clear").click(function (e) {
+                searchForm.empty().submit();
+            })
         </script>
 
     </th:block>

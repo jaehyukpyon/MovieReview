@@ -46,12 +46,15 @@ public class PageResultDTO<DTO, EN> {
 
         this.start = tempEnd - 9;
 
+        // boolean
         this.prev = this.start > 1;
 
         this.end = this.totalPage > tempEnd ? tempEnd : this.totalPage;
 
+        // boolean
         this.next = this.totalPage > tempEnd;
 
+        // IntStream.rangeClosed(int startInclusive, int endInclusive)
         this.pageList = IntStream.rangeClosed(this.start, this.end).boxed().collect(Collectors.toList());
     }
 

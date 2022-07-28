@@ -9,8 +9,10 @@
 
         <form th:action="@{/guestbook/register}" th:method="post">
 
-            <!--페이지 번호 기억-->
-            <input type="hidden" name="page" th:value="${requestDTO.page}">
+            <!--페이지 번호, 검색 조건(type) 및 검색어 기억-->
+            <input type="hidden" name="page" th:value="${requestDTO.page}" />
+            <input type="hidden" name="type" th:value="${requestDTO.type}" />
+            <input type="hidden" name="keyword" th:value="${requestDTO.keyword}" />
 
             <div class="form-group">
                 <label>gno</label>
@@ -44,8 +46,8 @@
         </form>
 
         <button type="button" class="btn btn-primary modifyBtn">modify</button>
-        <button type="button" class="btn btn-info listBtn">list</button>
-        <button type="button" class="btn btn-danger removeBtn">remove</button>
+        <button type="button" class="btn btn-info listBtn">back to list</button>
+        <button type="button" class="btn btn-danger removeBtn">delete</button>
 
 
 
@@ -56,7 +58,6 @@
                 if (!confirm("삭제하시겠습니까?")) {
                     return;
                 }
-
                 actionForm
                         .attr("action", "/guestbook/remove")
                         .attr("method", "post");
@@ -65,27 +66,33 @@
             });
 
             $("button.modifyBtn").click(function () {
-               if (!confirm("수정하시겠습니까?")) {
-                   return;
-               }
-
-               actionForm
-                        .attr("action", "/guestbook/modfy")
-                        .attr("method", "post")
-                        .submit();
+                if (!confirm("수정하시겠습니까?")) {
+                return;
+                }
+                actionForm
+                    .attr("action", "/guestbook/modify")
+                    .attr("method", "post")
+                    .submit();
             });
 
             $("button.listBtn").click(function () {
-               const pageInfo = $("input[name='page']");
+                // const pageInfo = $("input[name='page']");
 
-               actionForm.empty();
-               actionForm.append(pageInfo);
-               actionForm
-                        .attr("action", "/guestbook/list")
-                        .attr("method", "get");
+                const page = $("input[name='page']");
+                const type = $("input[name='type']");
+                const keyword = $("input[name='keyword']");
 
-               console.log(actionForm.html());
-               actionForm.submit();
+                actionForm.empty();
+                actionForm.append(page);
+                actionForm.append(type);
+                actionForm.append(keyword);
+
+                actionForm
+                    .attr("action", "/guestbook/list")
+                    .attr("method", "get");
+
+                console.log(actionForm.html());
+                actionForm.submit();
             });
         </script>
 
