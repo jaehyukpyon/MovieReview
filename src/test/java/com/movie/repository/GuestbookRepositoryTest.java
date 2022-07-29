@@ -23,7 +23,7 @@ public class GuestbookRepositoryTest {
     @Autowired
     private GuestbookRepository guestbookRepository;
 
-    @Test
+    //@Test
     public void insertDummies() {
         IntStream.rangeClosed(1, 300).forEach(i -> {
             Guestbook guestbook = Guestbook.builder()
